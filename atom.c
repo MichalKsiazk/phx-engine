@@ -40,7 +40,7 @@ struct atom3d* init_atom3d(unsigned int id, vec3d* position, vec3d* translation)
     atom->id = id;
     atom->position = position;
     atom->outer_border_color = new_vec3f(0.0f,1.0f,0.0f);
-	atom->color = DEFAULT_ATOM_COLOR;
+	atom->color = 0;
     if(translation == NULL)
     {
         atom->translation = new_vec3d(0,0,0);

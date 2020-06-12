@@ -41,6 +41,7 @@ void init_renderer()
 
     float zero_point_buffer[] = { 0.0f,  0.0f, 0.0f};
 
+
     #ifdef GEOMETRY_RENDERER
 
     common_vbo_id = gen_vbo(&zero_point_buffer[0], 3);
@@ -77,10 +78,15 @@ void init_renderer()
     atom_shader_program = gen_shader_program(atom_vert_shader, 0, atom_frag_shader);
 
     glUseProgram(atom_shader_program);
+	glUniform3f(glGetUniformLocation(atom_shader_program, "new_color"),
+			   	GET_COLOR(DEFAULT_ATOM_COLOR, 0),
+				GET_COLOR(DEFAULT_ATOM_COLOR, 1),
+				GET_COLOR(DEFAULT_ATOM_COLOR, 2));
     free_m3d(model);
     #endif
 
     
+	init_sp_renderer();
 
 
 }
@@ -116,11 +122,15 @@ void init_renderer()
 void render_atoms(atom3d** atoms, unsigned int atoms_count, float scale)
 {
     glUseProgram(atom_shader_program);
+	glUniform3f(glGetUniformLocation(atom_shader_program, "new_color"),
+			   	GET_COLOR(DEFAULT_ATOM_COLOR, 0),
+				GET_COLOR(DEFAULT_ATOM_COLOR, 1),
+				GET_COLOR(DEFAULT_ATOM_COLOR, 2));
     //glUniform1f(glGetUniformLocation(atom_shader_program, "radius"), GLOBAL_ATOM_RADIUS);
     glUniform1f(glGetUniformLocation(atom_shader_program, "scale"), scale);
-
-    glUniformMatrix4fv(glGetUniformLocation(atom_shader_program, "projection"), 1, GL_FALSE, projection);
-    load_view_matrix();
+	
+	load_projection_matrix(atom_shader_program);
+    load_view_matrix(atom_shader_program);
 
 
     mat4 transformation;
@@ -153,7 +163,12 @@ void render_atoms(atom3d** atoms, unsigned int atoms_count, float scale)
 
 }
 
-void load_view_matrix()
+void load_projection_matrix(GLuint shader_program)
+{
+    glUniformMatrix4fv(glGetUniformLocation(shader_program, "projection"), 1, GL_FALSE, projection);
+}
+
+void load_view_matrix(GLuint shader_program)
 {
     mat4 view;
 
@@ -165,7 +180,7 @@ void load_view_matrix()
     glm_scale(view, (vec3){1,1,1});
 
 
-    glUniformMatrix4fv(glGetUniformLocation(atom_shader_program, "view"), 1, GL_FALSE, (float *)view);
+    glUniformMatrix4fv(glGetUniformLocation(shader_program, "view"), 1, GL_FALSE, (float *)view);
 }
 
 
@@ -243,4 +258,34 @@ void render_scenery()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, floor_ibo);
     glDrawElements(GL_TRIANGLES, floor_vao_lenght, GL_UNSIGNED_INT, NULL);
     glDisableVertexAttribArray(0);
+}
+
+void init_sp_renderer()
+{
+    sp_grid_vs = gen_shader(GL_VERTEX_SHADER, "shaders/line.vert");
+    sp_grid_gs = gen_shader(GL_GEOMETRY_SHADER, "shaders/line.geom");
+    sp_grid_fs = gen_shader(GL_FRAGMENT_SHADER, "shaders/line.frag");
+
+    sp_shader_program = gen_shader_program(sp_grid_vs, sp_grid_gs, sp_grid_fs);
+	glUseProgram(sp_shader_program);
+	load_projection_matrix(sp_shader_program);
+
+    float zero_point_buffer[] = { 0.0f,  0.0f, 0.0f};
+    sp_vbo = gen_vbo(&zero_point_buffer[0], 3);
+
+    glBindBuffer(GL_ARRAY_BUFFER, sp_vbo);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0,(void*) 0);
+
+    //glUniform1f(glGetUniformLocation(sp_shader_program, "aspect_ratio"), (float)PHX_ASPECT_RATIO);
+	
+
+}
+
+void draw_line(float ax, float ay, float az, float bx, float by, float bz)
+{
+	load_projection_matrix(sp_shader_program);
+	load_view_matrix(sp_shader_program);
+	glUniform3f(glGetUniformLocation(sp_shader_program, "a_point"), ax, ay, az);
+	glUniform3f(glGetUniformLocation(sp_shader_program, "b_point"), bx, by, bz);
+	glDrawArrays(GL_POINTS, 0, 3);		
 }

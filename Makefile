@@ -11,6 +11,7 @@ objects += renderer.o
 objects += model_loader.o
 objects += bmfont.o
 objects += utils.o
+objects += sp_system.o
 
 
 libs =  -lGLEW -lglfw -lGLU -lGL -lX11 -lpthread -ldl -lcglm

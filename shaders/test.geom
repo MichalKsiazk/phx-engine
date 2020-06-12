@@ -2,7 +2,8 @@
 layout (points) in;
 layout (line_strip, max_vertices = 400) out;
 
-in VS_OUT {
+in VS_OUT
+{
     float radius;
     vec3 border_color;
     mat4 transformation;

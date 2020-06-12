@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h> 
+#include <stdbool.h> 
 #include <float.h>
 
 typedef struct collision_event
@@ -108,16 +109,16 @@ uint8_t test_nn_collision(unsigned int atom_id, atom3d** atoms, unsigned int ac_
 
 void find_collisions(unsigned int atom_id, atom3d** atoms, unsigned int ac_size)
 {
-    for(int j = 0; j < ac_size; j++)
+	bool is_colliding = false;
+    for(int j = atom_id + 1; j < ac_size; j++)
     {
-        if(j == atom_id) continue;
         
-        uint8_t was_detected = check_for_cls(atoms[atom_id], j);
+        //uint8_t was_detected = check_for_cls(atoms[atom_id], j);
 
-        if(was_detected)
-        {
-            continue;
-        }
+        //if(was_detected)
+        //{
+        //    continue;
+        //}
 
         double dst = distance3d(get_atom_pos(atoms[atom_id]), get_atom_pos(atoms[j]));
 
@@ -131,13 +132,21 @@ void find_collisions(unsigned int atom_id, atom3d** atoms, unsigned int ac_size)
             cls_event_t* new_event = new_cls_event(atom_id, j, dst, NULL);
 
             push_cls_event(cls_event_list, new_event);
+			is_colliding = true;
+			detected_collisions++;  		
         }
-        else
-        {
-            //set_outer_border_color(atoms[atom_id], 0, 1, 0);
-        }
-        
+
+
     }
+	if(is_colliding)
+	{
+		set_color(atoms[atom_id], BLUE_COLOR);
+	}
+	else
+	{
+		set_color(atoms[atom_id], DEFAULT_ATOM_COLOR);
+	}
+
 }
 
 int nearest_atom_id(atom3d** atoms, unsigned int ac_size, vec3f* point)

@@ -29,4 +29,5 @@
 #define BLUE_COLOR 			1
 
 extern float color_table[];
-unsigned int color_changes; 
+unsigned int color_changes;
+unsigned int detected_collisions;

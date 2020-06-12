@@ -8,7 +8,8 @@ uniform mat4 transformation;
 
 uniform vec3 border_color;
 
-out VS_OUT {
+out VS_OUT
+{
     float radius;
     vec3 border_color;
     mat4 transformation;

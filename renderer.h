@@ -28,6 +28,14 @@ GLuint atom_frag_shader;
 
 GLuint atom_shader_program;
 
+GLuint sp_grid_vs;
+GLuint sp_grid_gs;
+GLuint sp_grid_fs;
+
+GLuint sp_shader_program;
+
+unsigned int sp_vbo;
+
 int gen_vbo(float *vertices, unsigned int vertices_size);
 void render_shape(unsigned int vao_id, unsigned int vao_size);
 
@@ -38,5 +46,6 @@ void move_camera(GLFWwindow* window);
 
 void gen_model(m3d_t* model, unsigned int* vbo, unsigned int* vao, unsigned int* ibo, unsigned int* lenght);
 
+void draw_line(float ax, float ay, float az, float bx, float by, float bz);
 void render_scenery();
-
+void init_sp_renderer();

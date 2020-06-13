@@ -18,6 +18,7 @@
 
 void init_engine(GLFWwindow* window)
 {
+
     //createCapabilities();
     bmfont_init(DEBUG_FONT_IMG_LOCATION , DEBUG_FONT_CFG_LOCATION);
 
@@ -25,7 +26,7 @@ void init_engine(GLFWwindow* window)
     glClearColor(0.0f, 0.2f, 0.2f, 0.0f);
 
     init_renderer();
-    int atoms_count = 10;
+    int atoms_count = 200;
     atom3d** atoms = (atom3d*) malloc(get_atom3d_size() * atoms_count);
 
     init_counter();
@@ -62,10 +63,10 @@ void init_engine(GLFWwindow* window)
 
 		set_font_color(1,1,1,1);
         count_fps();
-		//update_sp_system();	
+		update_sp_system();	
 		for(int i = 0; i < atoms_count; i++)
 		{
-			move_towards(get_translation(atoms[i]), get_atom_pos(atoms[i]), zero_point, 0.00006);
+			move_towards(get_translation(atoms[i]), get_atom_pos(atoms[i]), zero_point, 0.000001);
 		}
         for(int i = 0; i < atoms_count; i++)
         {
@@ -73,8 +74,11 @@ void init_engine(GLFWwindow* window)
             find_collisions(i, atoms, atoms_count);
 
         }
-		
-
+        for(int i = 0; i < atoms_count; i++)
+		{
+			vec3d* pos = get_atom_pos(atoms[i]);
+			draw_cube(floor(get_v3d_x(pos)),floor(get_v3d_y(pos)),floor(get_v3d_z(pos)), DEFAULT_ATOM_COLOR);	
+		}
         execute_cls_events(atoms);
 		
         for(int i = 0; i < atoms_count; i++)
@@ -82,7 +86,6 @@ void init_engine(GLFWwindow* window)
             reset_cls_list(atoms[i]);
         }
         clear_cls_event_list();
-        
         for(int i = 0; i < atoms_count; i++)
         {
             move_atom3d(atoms[i]);

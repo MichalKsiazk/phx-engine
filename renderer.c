@@ -4,12 +4,12 @@
 
 
 
-const float aspect_ratio = WINDOW_SIZE_X / WINDOW_SIZE_Y;
+const float aspect_ratio =  WINDOW_SIZE_X / WINDOW_SIZE_Y;
 float fov = 70;
-float near_plane = 0.1f;
-float far_plane = 1000.0f;
+float near = 0.1f;
+float far = 1000.0f;
 
-float camera_pos_x = 1;
+float camera_pos_x = 10;
 float camera_pos_y = 0;
 float camera_pos_z = 0;
 
@@ -26,18 +26,25 @@ void init_renderer()
     glEnable(GL_DEPTH_TEST); 
     glDisable(GL_CULL_FACE);
 
-    float y_scale = (float) ((1.0f / tanf(deg_to_rad(fov / 2.0f))) * aspect_ratio);
-    float x_scale = (float) y_scale / aspect_ratio;
-    float frustum_lenght = far_plane - near_plane;
 
+    float y_scale = (float) ((1.0f / tanf(deg_to_rad(fov / 2.0f))) * aspect_ratio);
+    float x_scale = (float) y_scale * aspect_ratio;
+    float frustum_lenght = far - near;
+
+	glm_mat4_zero(projection);
+/*
     projection[0][0] = x_scale;
     projection[1][1] = y_scale;
-    projection[2][2] = -((far_plane + near_plane) / frustum_lenght);
-    projection[3][2] = -((2 * near_plane * far_plane) / frustum_lenght);
+    projection[2][2] = -((far + near) / frustum_lenght);
+    projection[3][2] = -((2 * near * far) / frustum_lenght);
     projection[2][3] = -1;
-
-
+*/
     //init_camera(glm_ve
+    projection[0][0] = aspect_ratio;
+    projection[1][1] = y_scale;
+    projection[2][2] = -((far + near) / frustum_lenght);
+    projection[3][2] = -((2 * near * far) / frustum_lenght);
+    projection[2][3] = -1;
 
     float zero_point_buffer[] = { 0.0f,  0.0f, 0.0f};
 

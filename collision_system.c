@@ -180,9 +180,9 @@ void execute_cls_events(atom3d** atoms)
     double force = (float)current->dst / (2 * GLOBAL_ATOM_RADIUS);
 
     //0.0000004
-    move_in_direction(get_translation(atoms[current->a_id]), dir, -0.00003 * pow((1/force), 3));
+    move_in_direction(get_translation(atoms[current->a_id]), dir, -0.00001 * pow((1/force), 3));
     invert_vec3d(dir);
-    move_in_direction(get_translation(atoms[current->b_id]), dir, -0.00003 * pow((1/force), 3));
+    move_in_direction(get_translation(atoms[current->b_id]), dir, -0.00001 * pow((1/force), 3));
 
     free(dir);
 

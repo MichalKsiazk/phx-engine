@@ -1,13 +1,13 @@
 #include "math_utils.h"
 
-#define WINDOW_SIZE_X   1400
+#define WINDOW_SIZE_X   1800
 #define WINDOW_SIZE_Y   1000
 
 
 #define WINDOW_TITLE "phx engine"
 
 
-#define GLOBAL_ATOM_RADIUS 0.1
+#define GLOBAL_ATOM_RADIUS 0.05
 #define GLOBAL_ATOM_RESOLUTION 12
 
 #define GRAVITATE_AT_ZERO 0
@@ -26,7 +26,9 @@
 
 //COLORS
 #define DEFAULT_ATOM_COLOR 	0
-#define BLUE_COLOR 			1
+#define RED_COLOR			1
+#define GREEN_COLOR			2
+#define BLUE_COLOR 			3
 
 extern float color_table[];
 unsigned int color_changes;

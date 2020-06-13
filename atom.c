@@ -36,22 +36,22 @@ struct atom3d_props
 
 struct atom3d* init_atom3d(unsigned int id, vec3d* position, vec3d* translation)
 {
-    atom3d* atom = (atom3d*)malloc(sizeof(atom3d));
-    atom->id = id;
-    atom->position = position;
-    atom->outer_border_color = new_vec3f(0.0f,1.0f,0.0f);
+	atom3d* atom = (atom3d*)malloc(sizeof(atom3d));
+	atom->id = id;
+	atom->position = position;
+	atom->outer_border_color = new_vec3f(0.0f,1.0f,0.0f);
 	atom->color = 0;
-    if(translation == NULL)
-    {
-        atom->translation = new_vec3d(0,0,0);
-    }
-    else
-    {
-        atom->translation = translation;
-    }
-    atom->collisions = new_cls_t(-1, NULL);
-    return atom;
-    
+	if(translation == NULL)
+	{
+		atom->translation = new_vec3d(0,0,0);
+	}
+	else
+	{
+		atom->translation = translation;
+	}
+	atom->collisions = new_cls_t(-1, NULL);
+	return atom;
+
 }
 
 cls_t* new_cls_t(int id, cls_t* next)
@@ -119,17 +119,12 @@ size_t get_atom3d_size()
 
 void geometry_render_atom3d(struct atom3d* ptr, int shader_program_id)
 {
-
-    
     vec3f* outer_color = ptr->outer_border_color;
 
-
-    glUniform3f(glGetUniformLocation(shader_program_id, "border_color")
-    , (float)get_v3f_x(outer_color)
-    , (float)get_v3f_y(outer_color)
-    , (float)get_v3f_z(outer_color));
-
-
+	glUniform3f(glGetUniformLocation(shader_program_id, "border_color")
+			, (float)get_v3f_x(outer_color)
+			, (float)get_v3f_y(outer_color)
+			, (float)get_v3f_z(outer_color));
 
     //GLint position_location = glGetUniformLocation(shader_program_id, "position");
 
@@ -163,10 +158,10 @@ void instance_render_atom3d(struct atom3d* ptr, int shader_program_id, unsigned 
 
     mat4 transformation;
     glm_mat4_identity(transformation);
-    glm_translate(transformation, (vec3){(float)get_v3d_x(pos), (float)get_v3d_y(pos), (float)get_v3d_z(pos)});
-    glm_rotate(transformation, TO_RADIANS(0), (vec3){1,0,0});
-    glm_rotate(transformation, TO_RADIANS(0), (vec3){0,1,0});
-    glm_rotate(transformation, TO_RADIANS(0), (vec3){0,0,1});
+	glm_translate(transformation, (vec3){(float)get_v3d_x(pos), (float)get_v3d_y(pos), (float)get_v3d_z(pos)});
+	glm_rotate(transformation, TO_RADIANS(0), (vec3){1,0,0});
+	glm_rotate(transformation, TO_RADIANS(0), (vec3){0,1,0});
+	glm_rotate(transformation, TO_RADIANS(0), (vec3){0,0,1});
     glm_scale(transformation, (vec3){1,1,1});
 
     glUniformMatrix4fv(glGetUniformLocation(shader_program_id, "transformation"), 1, GL_FALSE, (float*)transformation);

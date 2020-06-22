@@ -82,7 +82,7 @@ double distance2d(vec3d* a, vec3d* b)
 
 double distance3d(vec3d* a, vec3d* b)
 {
-    return sqrt(pow(1 / PHX_ASPECT_RATIO * (a->x - b->x), 2) + pow(a->y - b->y, 2) + pow(a->z - b->z, 2));
+    return sqrt(pow((a->x - b->x), 2) + pow(a->y - b->y, 2) + pow(a->z - b->z, 2));
 }
 
 void move_vec3d(vec3d* vec, double x, double y, double z)

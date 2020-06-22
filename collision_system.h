@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include "atom.h"
+#include "sp_system.h"
 #include "phx_config.h"
 
 enum collision_status

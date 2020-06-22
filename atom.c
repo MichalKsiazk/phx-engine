@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h> 
+#include <stdbool.h> 
 
 #include <cglm/cglm.h>
 
@@ -18,9 +19,12 @@ typedef struct atom3d
     vec3d* position;
     vec3d* translation;
     double velocity;
+	double mass;
+	double radius;
     vec3f* outer_border_color;
     cls_t* collisions;
     unsigned int color;
+
 }atom3d;
 
 typedef struct collision
@@ -29,18 +33,28 @@ typedef struct collision
     struct collision* next;
 } cls_t;
 
-struct atom3d_props
+typedef struct atomic_bond
 {
-};
+	/* was it executed in this iteration */
+	bool is_executed;
+	/* link to atoms collection */
+	int index_a;
+	int index_b;
+	/* physical properties of bond */
+	double damping;
+	double k;
+}atomic_bond;
 
 
-struct atom3d* init_atom3d(unsigned int id, vec3d* position, vec3d* translation)
+atom3d* init_atom3d(unsigned int id, vec3d* pos, double mass, double radius, vec3d* translation)
 {
 	atom3d* atom = (atom3d*)malloc(sizeof(atom3d));
 	atom->id = id;
-	atom->position = position;
+	atom->position = pos;
 	atom->outer_border_color = new_vec3f(0.0f,1.0f,0.0f);
 	atom->color = 0;
+	atom->radius = radius;
+	atom->mass = mass;
 	if(translation == NULL)
 	{
 		atom->translation = new_vec3d(0,0,0);
@@ -51,6 +65,10 @@ struct atom3d* init_atom3d(unsigned int id, vec3d* position, vec3d* translation)
 	}
 	atom->collisions = new_cls_t(-1, NULL);
 	return atom;
+}
+
+atomic_bond* init_atomic_bond(int index_a, int index_b, double damping, double k)
+{
 
 }
 
@@ -89,7 +107,6 @@ uint8_t check_for_cls(atom3d* atom, int cls_id)
         {
             return 0x1;
         }
-
     }
     return 0x0;
 }
@@ -152,6 +169,7 @@ void instance_render_atom3d(struct atom3d* ptr, int shader_program_id, unsigned 
     vec3f* outer_color = ptr->outer_border_color;
 	static unsigned int current_color;
 
+    glUniform1f(glGetUniformLocation(shader_program_id, "scale"), get_radius(ptr));
     //GLint position_location = glGetUniformLocation(shader_program_id, "position");
 
     vec3d* pos = ptr->position;
@@ -201,4 +219,19 @@ void set_outer_border_color(atom3d* atom, float r, float g, float b)
 void set_color(atom3d* atom, unsigned int color)
 {
 	atom->color = color;
+}
+
+unsigned int get_color(atom3d* atom)
+{
+	return atom->color;
+}
+
+double get_radius(atom3d* atom)
+{
+	return atom->radius;
+}
+
+double get_mass(atom3d* atom)
+{
+	return atom->mass;
 }

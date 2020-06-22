@@ -71,6 +71,7 @@ uint8_t check_collision(atom3d* atom_a, atom3d* atom_b)
 
 uint8_t test_nn_collision(unsigned int atom_id, atom3d** atoms, unsigned int ac_size)
 {
+	/*
     float red_color = 0;
 
     uint8_t colliding = 0x0;
@@ -95,7 +96,7 @@ uint8_t test_nn_collision(unsigned int atom_id, atom3d** atoms, unsigned int ac_
 
             double force = (float)dst / (2 * GLOBAL_ATOM_RADIUS);
 
-            move_in_direction(get_translation(atoms[atom_id]), dir, -0.0000004 * pow((1/force), 9));
+            move_in_direction(get_translation(atoms[atom_id]), dir, -0.0000020 * pow((1/force), 9));
             free(dir);
         }
         else
@@ -105,10 +106,23 @@ uint8_t test_nn_collision(unsigned int atom_id, atom3d** atoms, unsigned int ac_
         
     }
     return colliding;
+	*/
 }
 
 void find_collisions(unsigned int atom_id, atom3d** atoms, unsigned int ac_size)
 {
+	int rel = GRID_SIZE / 2;
+	vec3d* pos = get_atom_pos(atoms[atom_id]);
+	printf("%d\n", atom_id);
+	printf("%f", get_v3d_x(pos));
+	printf("   %d\n", (int)get_v3d_x(pos) + rel);
+	printf("%f", get_v3d_y(pos));
+	printf("   %d\n", (int)get_v3d_y(pos) + rel);
+	printf("%f", get_v3d_z(pos));
+	printf("   %d\n\n", (int)get_v3d_z(pos) + rel);
+
+
+	//subscribe_to_sp_cell(get_v3d_x(pos), get_v3d_y(pos), get_v3d_z(pos));
 	bool is_colliding = false;
     for(int j = atom_id + 1; j < ac_size; j++)
     {
@@ -125,7 +139,7 @@ void find_collisions(unsigned int atom_id, atom3d** atoms, unsigned int ac_size)
         
         
 
-        if(dst < 2 * GLOBAL_ATOM_RADIUS)
+        if(dst < get_radius(atoms[atom_id]) + get_radius(atoms[j]))
         {
             cls_t* cls = new_cls_t(atom_id, NULL);
             push_cls(atoms[j], cls);
@@ -177,12 +191,12 @@ void execute_cls_events(atom3d** atoms)
     
     vec3d* dir = get_dir_normalized(get_atom_pos(atoms[current->a_id]), get_atom_pos(atoms[current->b_id]));
 
-    double force = (float)current->dst / (2 * GLOBAL_ATOM_RADIUS);
+    double force = (double)current->dst / (2 * GLOBAL_ATOM_RADIUS);
 
     //0.0000004
-    move_in_direction(get_translation(atoms[current->a_id]), dir, -0.00001 * pow((1/force), 3));
+    move_in_direction(get_translation(atoms[current->a_id]), dir, 0.000001 * (1/force));
     invert_vec3d(dir);
-    move_in_direction(get_translation(atoms[current->b_id]), dir, -0.00001 * pow((1/force), 3));
+    move_in_direction(get_translation(atoms[current->b_id]), dir, 0.000001 * (1/force));
 
     free(dir);
 
